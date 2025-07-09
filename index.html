@@ -26,12 +26,24 @@
         }
 
         :root[data-theme="dark"] {
-            --bg-color: #121212;
-            --text-color: #f5f5f5;
-            --card-bg: #1e1e1e;
-            --white: #121212;
-            --dark-gray: #f5f5f5;
-            --light-blue: #1e1e1e;
+            --primary-blue: #3182ce;
+            --sky-blue: #63b3ed;
+            --light-blue: #2d3748;
+            --white: #1a202c;
+            --dark-gray: #e2e8f0;
+            --dark-blue: #2b6cb0;
+            --bg-color: #1a202c;
+            --text-color: #f7fafc;
+            --card-bg: #2d3748;
+        }
+
+        /* Add this to your existing dark theme styles */
+        :root[data-theme="dark"] header .contact-info-bar,
+        :root[data-theme="dark"] header .contact-info-bar h3,
+        :root[data-theme="dark"] header .contact-info-bar i,
+        :root[data-theme="dark"] header .contact-info-bar .contact-info-item,
+        :root[data-theme="dark"] header .contact-info-bar .phone-number {
+            color: var(--white) !important;
         }
 
         * {
@@ -186,8 +198,13 @@
             background-color: var(--sky-blue);
         }
 
+        h3 {
+            color: var(--primary-blue);
+        }
+
         p {
             margin-bottom: 15px;
+            color: var(--dark-gray);
         }
 
         .mission-box {
@@ -290,7 +307,7 @@
         }
 
         .btn:hover {
-            background-color: #0d3a6e;
+            background-color: var(--dark-blue);
             transform: translateY(-2px);
         }
 
@@ -303,7 +320,7 @@
 
         footer {
             background-color: var(--primary-blue);
-            color: var(--white);
+            color: #e6f2ff;
             text-align: center;
             padding: 20px 0;
             margin-top: 40px;
@@ -341,6 +358,7 @@
             justify-content: space-between;
             margin-bottom: 15px;
             font-size: 14px;
+            color: var(--dark-gray);
         }
 
         .apply-btn {
@@ -355,7 +373,7 @@
         }
 
         .apply-btn:hover {
-            background-color: #0d3a6e;
+            background-color: var(--dark-blue);
         }
 
         .theme-switcher {
@@ -405,7 +423,7 @@
         }
 
         .footer-contact-item a {
-            color: var(--white);
+            color: #e6f2ff;
             text-decoration: none;
         }
 
@@ -465,6 +483,7 @@
             background-color: var(--dark-blue);
         }
 
+        /* Mobile Navigation Styles */
         @media (max-width: 768px) {
             .container {
                 padding: 0 20px;
@@ -480,17 +499,66 @@
                 justify-content: center;
             }
 
+            /* Mobile Navigation Toggle */
+            .mobile-menu-toggle {
+                display: block;
+                background: transparent;
+                border: none;
+                color: var(--primary-blue);
+                font-size: 24px;
+                cursor: pointer;
+                padding: 15px;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                z-index: 101;
+            }
+
+            nav {
+                position: relative;
+                padding: 15px 0;
+            }
+
             .tabs {
                 flex-direction: column;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--primary-blue);
+                z-index: 100;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .tabs.active {
+                max-height: 500px; /* Adjust based on content */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             }
 
             .tabs li {
-                margin: 5px 0;
+                margin: 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                width: 100%;
+            }
+
+            .tabs li:last-child {
+                border-bottom: none;
             }
 
             .tabs li a {
-                padding: 12px;
-                text-align: center;
+                padding: 15px 20px;
+                text-align: left;
+                width: 100%;
+            }
+
+            .tabs li a.active {
+                background-color: var(--sky-blue);
+                color: var(--primary-blue);
             }
 
             h2 {
@@ -529,6 +597,13 @@
                 flex-direction: column;
                 gap: 15px;
                 align-items: center;
+            }
+        }
+
+        /* Desktop - Hide mobile toggle */
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
             }
         }
 
@@ -588,6 +663,22 @@
         header .contact-info-bar .contact-info-item i {
             color: var(--primary-blue);
         }
+
+        /* Dark theme specific styles */
+        :root[data-theme="dark"] h2,
+        :root[data-theme="dark"] h3 {
+            color: var(--sky-blue);
+        }
+
+        :root[data-theme="dark"] footer a,
+        :root[data-theme="dark"] footer .footer-contact-item i {
+            color: #e6f2ff;
+        }
+
+        :root[data-theme="dark"] footer .copyright {
+            color: #e6f2ff;
+        }
+}
     </style>
 </head>
 <body data-theme="light">
@@ -611,7 +702,10 @@
 
 <nav>
     <div class="container">
-        <ul class="tabs">
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="tabs" id="mainTabs">
             <li><a href="#about" class="active">About</a></li>
             <li><a href="#services">Our Services</a></li>
             <li><a href="#careers">Careers</a></li>
@@ -629,7 +723,7 @@
             Whether you're building new, upgrading old, or maintaining mission-critical operations, Electro Machino Engineering is your reliable partner for all electrical things.</p>
 
         <div class="mission-box">
-            <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">Our Mission</h3>
+            <h3 style="margin-bottom: 15px; display: flex; align-items: center;">Our Mission</h3>
             <p>
                 To empower the electrical industry by delivering safe, compliant, and cost-effective testing, commissioning, and diagnostic services, while continuously adapting to the evolving needs of modern power systems.
                 Provide expert electrical services across industries from factories and power plants to substations, commercial buildings, and government infrastructure. Our mission is to enhance operations by delivering efficient, compliant, safe, and future ready electrical systems.
@@ -637,7 +731,7 @@
         </div>
 
         <div class="mission-box">
-            <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">Our Vision</h3>
+            <h3 style="margin-bottom: 15px; display: flex; align-items: center;">Our Vision</h3>
             <p>
                 To become one of India's most trusted names in the field of electrical engineering services by upholding technical excellence, transparency, and customer satisfaction in every project we undertake.
                 As we grow, we aim to expand our services across regions, industries, and technologies. We envision a future where Electro Machino Engineering becomes a name synonymous with trust, technical mastery, and project excellence in the field of electrical engineering services. We aim to set new benchmarks in the industry through continuous improvement, ethical business practices, and unwavering customer focus.
@@ -720,7 +814,7 @@
         </div>
         </br>
         </br>
-        <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">Why Choose Electro Machino Engineering?</h3>
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center;">Why Choose Electro Machino Engineering?</h3>
         ✅ Industry Expertise – Work with cutting-edge electrical testing technologies. <br>
         ✅ Expert Engineers & Certified Technicians. <br>
         ✅ NABL-calibrated Testing Instruments. <br>
@@ -741,7 +835,7 @@
             Join our team of skilled professionals and grow your career in the electrical engineering and testing industry. We offer competitive salaries, continuous learning opportunities, and a dynamic work environment.
         </p>
         <p>
-        <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">Why Work With Us?</h3>
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center;">Why Work With Us?</h3>
         ✅ Industry Expertise – Work with cutting-edge electrical testing technologies. <br>
         ✅ Growth Opportunities – Continuous training and career advancement. <br>
         ✅ Safety-First Culture – We prioritize employee well-being and compliance. <br>
@@ -782,14 +876,14 @@
 
     <section id="contact" class="tab-content">
         <h2>Contact Us</h2>
-        <p><h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">Get in touch for reliable electrical testing solutions</h3>
+        <p><h3 style="margin-bottom: 15px; display: flex; align-items: center;">Get in touch for reliable electrical testing solutions</h3>
         <p>At Electro Machino Engineering, we're committed to providing exceptional electrical testing, commissioning, and maintenance services. Whether you need a quote, have technical questions, or want to discuss a project, our team is ready to assist you.</p>
 
-        <p><h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">Our Contact Details</h3>
+        <p><h3 style="margin-bottom: 15px; display: flex; align-items: center;">Our Contact Details</h3>
 
         <div class="contact-details" style="display: flex; flex-wrap: wrap; gap: 30px; background-color: var(--card-bg); padding: 25px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); transition: background-color 0.3s ease;">
             <div style="flex: 1; min-width: 300px;">
-                <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">
+                <h3 style="margin-bottom: 15px; display: flex; align-items: center;">
                     <i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--sky-blue);"></i> Office Address
                 </h3>
                 <address style="font-style: normal; margin-bottom: 20px; padding-left: 50px;">
@@ -800,7 +894,7 @@
                     <p>Kolkata -- 700123</p>
                 </address>
 
-                <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">
+                <h3 style="margin-bottom: 15px; display: flex; align-items: center;">
                     <i class="fas fa-phone-alt" style="margin-right: 10px; color: var(--sky-blue);"></i> Communication Details
                 </h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding-left: 50px;">
@@ -816,7 +910,7 @@
             </div>
 
             <div style="flex: 1; min-width: 300px;">
-                <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">
+                <h3 style="margin-bottom: 15px; display: flex; align-items: center;">
                     <i class="fas fa-map-marked-alt" style="margin-right: 10px; color: var(--sky-blue);"></i> Our Location
                 </h3>
                 <div style="height: 300px; border-radius: 8px; overflow: hidden;">
@@ -839,12 +933,12 @@
         </div>
 
         <div>
-            <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">Why Choose Us?</h3>
+            <h3 style="margin-bottom: 15px; display: flex; align-items: center;">Why Choose Us?</h3>
             ✅ 24/7 Emergency Support – Critical breakdown? Call us anytime.<br>
             ✅ Certified Experts – Our team follows ISO & IEC standards.<br>
             ✅ Quick Response – Get a callback within 2 business hours.<br>
             <br>
-            <h3 style="color: var(--primary-blue); margin-bottom: 15px; display: flex; align-items: center;">Connect With Us</h3>
+            <h3 style="margin-bottom: 15px; display: flex; align-items: center;">Connect With Us</h3>
             Follow us for updates on electrical safety tips and industry trends:<br>
             <i class="fab fa-linkedin" style="margin-right: 10px; color: var(--sky-blue);"></i> LinkedIn: <a href="#" target="_blank" rel="noopener noreferrer" style="color: var(--primary-blue); text-decoration: none;"> Electro Machino Engineering </a>
             <br>
@@ -875,7 +969,7 @@
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2025 Electro Machino Engineering | Developed by <i>Anjan</i></p>
+            <p style="color: var(--white);">&copy; 2025 Electro Machino Engineering | Developed by <i>Anjan Biswas</i></p>
         </div>
     </div>
 </footer>
@@ -903,6 +997,48 @@
         const themeSwitcher = document.getElementById('themeSwitcher');
         const themeColorMeta = document.getElementById('themeColorMeta');
         const html = document.documentElement;
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mainTabs = document.getElementById('mainTabs');
+
+        // Mobile menu toggle functionality
+        if (mobileMenuToggle && mainTabs) {
+            mobileMenuToggle.addEventListener('click', function() {
+                mainTabs.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (mainTabs.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768 && 
+                    !e.target.closest('.tabs') && 
+                    !e.target.closest('#mobileMenuToggle') &&
+                    mainTabs.classList.contains('active')) {
+                    mainTabs.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('.tabs li a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        mainTabs.classList.remove('active');
+                        const icon = mobileMenuToggle.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+        }
 
         // Function to activate tab based on hash
         function activateTabFromHash() {
@@ -966,7 +1102,7 @@
             localStorage.setItem('theme', theme);
 
             // Update theme color meta tag
-            themeColorMeta.setAttribute('content', theme === 'dark' ? '#121212' : '#1a4b8c');
+            themeColorMeta.setAttribute('content', theme === 'dark' ? '#1a202c' : '#1a4b8c');
 
             // Update switcher icon
             if (theme === 'dark') {
@@ -1025,9 +1161,6 @@
         window.setCareerSubject = function(jobTitle) {
             // Show the popup
             popup.classList.add('active');
-
-            // Update URL hash to stay on contact page
-            window.location.hash = '#contact';
 
             // Prevent default behavior
             return false;
